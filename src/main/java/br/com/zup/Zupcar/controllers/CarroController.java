@@ -14,19 +14,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping ("/carros")
+@RequestMapping("/carros")
 public class CarroController {
 
-    private List<CarroDTO>concessionaria = new ArrayList<>();
+    private List<CarroDTO> concessionaria = new ArrayList<>();
 
     @GetMapping
-    public List<CarroDTO>exibirTodosOsCarros(){
+    public List<CarroDTO> exibirTodosOsCarros() {
         return concessionaria;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void cadastrarCarro(@RequestBody CarroDTO carroDTO){
+    public void cadastrarCarro(@RequestBody CarroDTO carroDTO) {
         concessionaria.add(carroDTO);
     }
 
@@ -37,10 +37,10 @@ public class CarroController {
     }*/
 
     @GetMapping("{nomeCarro}")
-    public CarroDTO buscarCarro(@PathVariable String nomeCarro){
+    public CarroDTO buscarCarro(@PathVariable String nomeCarro) {
         CarroDTO carroDTO = null;
-        for (CarroDTO nomeReferencia:concessionaria) {
-            if (nomeReferencia.getModelo().equals(nomeCarro)){
+        for (CarroDTO nomeReferencia : concessionaria) {
+            if (nomeReferencia.getModelo().equals(nomeCarro)) {
                 System.out.println(nomeReferencia);
                 return nomeReferencia;
             }
@@ -50,10 +50,17 @@ public class CarroController {
 
     @PutMapping("{nomeCarro}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public CarroDTO atualizarCarro(@PathVariable String nomeCarro){
-        for (CarroDTO nomereferencia:concessionaria) {
-            if (nomereferencia.getModelo().equals(nomeCarro)){
+    public CarroDTO atualizarCarro(@PathVariable String nomeCarro, @RequestBody CarroDTO carroDTO) { //Como parametro vai precisar além do nome do carro a ser atualizado, das
+        //informações do body que serão atualizadas através do PUT
+        for (CarroDTO nomereferencia : concessionaria) {
+            if (nomereferencia.getModelo().equals(nomeCarro)) {
+                nomereferencia.setAno(carroDTO.getAno());
+                nomereferencia.setMotor(carroDTO.getMotor());
+                nomereferencia.setCor(carroDTO.getCor());
+
                 return nomereferencia;
+
+
             }
 
         }
@@ -61,5 +68,21 @@ public class CarroController {
 
     }
 
+    @DeleteMapping("{nomeCarro}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletarCarro(@PathVariable String nomeCarro) {
+        CarroDTO carroDTODeletado = null;
+        for (CarroDTO carroReferencia : concessionaria) {
+            if (carroReferencia.getModelo().equals(nomeCarro)) {
+                carroDTODeletado = carroReferencia;
+                concessionaria.remove(carroReferencia);
+            }
 
+        }
+        if (carroDTODeletado == null) {
+
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+    }
 }
