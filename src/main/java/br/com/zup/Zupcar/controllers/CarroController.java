@@ -51,7 +51,7 @@ public class CarroController {
     @PutMapping("{nomeCarro}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public CarroDTO atualizarCarro(@PathVariable String nomeCarro, @RequestBody CarroDTO carroDTO) { //Como parametro vai precisar além do nome do carro a ser atualizado, das
-        //informações do body que serão atualizadas através do PUT
+                                                                                                     //informações do body que serão atualizadas através do PUT
         for (CarroDTO nomereferencia : concessionaria) {
             if (nomereferencia.getModelo().equals(nomeCarro)) {
                 nomereferencia.setAno(carroDTO.getAno());
@@ -75,13 +75,17 @@ public class CarroController {
         for (CarroDTO carroReferencia : concessionaria) {
             if (carroReferencia.getModelo().equals(nomeCarro)) {
                 carroDTODeletado = carroReferencia;
-                concessionaria.remove(carroReferencia);
+
+
             }
 
         }
+
         if (carroDTODeletado == null) {
 
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }else{
+            concessionaria.remove(carroDTODeletado);
         }
 
     }
